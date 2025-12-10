@@ -1,0 +1,120 @@
+body {
+    
+}
+.Nav {
+  width: 100%;
+  background-color: rgb(6, 93, 151);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+  
+
+ .link-externo{
+    display: inline;
+    width: 10%;
+    height: 0.15%;
+    padding-right: .5rem;
+    color: rgb(246, 244, 248);
+
+ }
+/*********************************************************************************************/
+
+  header {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(252, 251, 251);
+    height: 5%;
+    width: 100%;
+}
+
+.logoScoutsArgentina{
+   display: flex;
+   margin-top: 1rem;
+   min-width:100%;
+   
+    
+}
+
+.sesion{
+    
+    display: flex;
+    height: 100%;
+    flex-flow:column;
+    justify-content:center;
+    align-content: space-between;
+       
+}
+
+.datos_usr{
+    display: inline;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    }
+
+
+.boton_sesion{
+    margin-left: 3%;
+    margin-bottom: 0%;
+    align-self: end;
+    justify-self: stretch;
+
+}
+
+/*********************************************************************************************/
+main {
+    background-color: rgb(76, 3, 136);
+    border-top: solid .15rem;
+    border-left: solid .15rem;
+    border-radius: 1%;
+    display: flexbox;
+    min-height: 35rem;
+}
+
+.menu_opciones{
+    background-color: rgb(254, 254, 255);
+    padding-top:10%;
+    padding-left:15%;
+    width: 100%;
+    height: 100%;
+      
+}
+
+
+.display{
+
+    background-color: rgb(4, 0, 7);
+    border-radius: 1%;
+    color: aliceblue;
+    display: flexbox;
+    margin: 1rem;
+    width: 98%;
+    min-height: 20rem;
+}
+.table_container{
+    padding: 1%;
+}
+
+.input_datos{
+    background-color:rgb(76, 3, 136);
+    width: 100%;
+    margin-top: 2rem;   
+    
+}
+.consola{
+    width: 100%;
+    padding-right:2%;
+}
+
+
+.segundo_logo{
+    padding-top:10%;
+    border-radius: 1%;
+}
