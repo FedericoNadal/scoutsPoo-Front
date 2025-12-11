@@ -31,6 +31,7 @@ export function Header() {
     El/La Scout es económico/a, trabajador/a y respetuoso/a del bien ajeno.<br />
     El/La Scout es puro/a y lleva una vida sana.<br />
 
+ Yo (….), por mi honor PROMETO hacer cuanto de mí dependa para cumplir mis deberes para con Dios, la Patria, con los demás y conmigo mismo, ayudar al prójimo y vivir la Ley Scout.
 
           </p>
         </div>
