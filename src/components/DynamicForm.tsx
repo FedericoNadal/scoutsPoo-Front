@@ -11,10 +11,9 @@ const camposSelect: Record<string, string> = {
 };
 
 
-
 interface DynamicFormProps {
   vistaActual: string;
-  fields?: string[]; // opcional si querés derivarlas de initialData
+  fields?: string[]; // opcional si se quiere derivarlas de initialData
   initialData?: Record<string, any>;
   onSubmit: (data: Record<string, any>) => void;
 }
@@ -32,32 +31,49 @@ export function DynamicForm({
   const [schema, setSchema] = useState<string[]>([]);
   const [form, setForm] = useState<Record<string, any>>(initialData);
   const [opciones, setOpciones] = useState<Record<string, any[]>>({});
-///////////////////////////////////
+
+
+  ///////////////////////////////////
 //USE EFFECT
 ///////////////////////////////////////////
 // 
-  useEffect(() => {
-    api.get(`/${vistaActual}`)
-      .then(res => {
-        const ejemplo = res.data[0];
-        if (ejemplo) {
+useEffect(() => {
+  let isMounted = true; // para evitar setState si el componente se desmonta
 
-          const campos = Object.keys(ejemplo);
-          setSchema(campos);
-          campos.forEach(campo => {
-            if (camposSelect[campo]) {
-              api.get(camposSelect[campo]).then(r => {
-                setOpciones(prev => ({
-                  ...prev,
-                  [campo]: r.data   // guardamos toda la lista
-                }));
-              });
-            }
-          });
-        }
-      })
-      .catch(err => console.error("Error cargando schema:", err));
-  }, [vistaActual]);
+  async function fetchData() {
+    try {
+      const res = await api.get(`/${vistaActual}`);
+      const ejemplo = res.data[0];
+
+      if (!ejemplo || !isMounted) return;
+
+      const campos = Object.keys(ejemplo);
+      setSchema(campos);
+
+      // Para cada campo que necesita select, hacemos GET paralelo
+      const opts: Record<string, any[]> = {};
+      await Promise.all(
+        campos.map(async (campo) => {
+          if (camposSelect[campo]) {
+            const r = await api.get(camposSelect[campo]);
+            opts[campo] = r.data;
+          }
+        })
+      );
+
+      if (isMounted) setOpciones(opts);
+    } catch (err) {
+      console.error("Error cargando schema:", err);
+    }
+  }
+
+  fetchData();
+
+  return () => {
+    isMounted = false;
+  };
+}, [vistaActual]);
+
 
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -83,35 +99,46 @@ export function DynamicForm({
         <div key={campo} className="mb-3">
           <label className="form-label">{campo}</label>
 
-          {camposSelect[campo] ? (    //si debe ser select.. ( desplegable)
-            <select
-              className="form-select"
-              name={campo}
-              value={form[campo] ?? ""}
-              onChange={handleChange}
-            >
-              <option value="">...</option>
+         {camposSelect[campo] ? (
+  campo === "graduacion" ? (
+    // Select para graduaciones (array de strings)
+    <select
+      className="form-select"
+      name={campo}
+      value={form[campo] ?? ""}
+      onChange={handleChange}
+    >
+      <option value="">...</option>
+      {opciones[campo]?.map((g: string) => (
+        <option key={g} value={g}>{g}</option>
+      ))}
+    </select>
+  ) : (
+    // Select para los demás (objetos con id/nombre)
+    <select
+      className="form-select"
+      name={campo}
+      value={form[campo] ?? ""}
+      onChange={handleChange}
+    >
+      <option value="">...</option>
+      {opciones[campo]?.map((opt: any) => {
+        const valor = Object.values(opt)[0] as number; // id
+        const texto = Object.values(opt)[1] as string; // nombre
+        return <option key={valor} value={valor}>{texto}</option>;
+      })}
+    </select>
+  )
+) : (
+  <input
+    type="text"
+    className="form-control"
+    name={campo}
+    value={form[campo] ?? ""}
+    onChange={handleChange}
+  />
+)}
 
-              {opciones[campo]?.map((opt) => {
-                const valor = Object.values(opt)[0] as number; // id
-                const texto = Object.values(opt)[1] as string; // nombre
-
-                return (
-                  <option key={valor} value={valor}>
-                    {texto}
-                  </option>
-                );
-              })}
-            </select>
-          ) : (
-            <input
-              type="text"
-              className="form-control"
-              name={campo}
-              value={form[campo] ?? ""}
-              onChange={handleChange}
-            />
-          )}
         </div>
       ))}
   </form>
