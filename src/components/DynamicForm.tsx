@@ -9,23 +9,43 @@ const schemaPost: Record<string, string[]> = {
   comunidades: ["actividadPrincipal"],
   grupo: ["denominacion"],
   actividades: ["descripcion"],
-  scouts: ["apodo", "nombre", "apellido", "graduacion", "idSede", "idGrupo", "idComunidad"]
+  scouts: ["apodo", "nombre", "apellido", "graduacion", "idSede", "idGrupo", "idComunidad"],
+  participaciones :["scoutId","fecha"]
 };
 
 // =====================================================
-// CAMPOS QUE USAN SELECT (según backend)
+// CAMPOS QUE USAN SELECT (conviene que se seleccionen entre una lista)
 // =====================================================
 const camposSelect: Record<string, string | null> = {
   graduacion: "/graduaciones",
   idSede: "/sedes",
   idGrupo: "/grupo",
-  idComunidad: "/comunidades"
+  idComunidad: "/comunidades",
+
+  scoutId: "/scouts",
+  actividadId: "/actividades"
 };
+
+// =====================================================
+// CAMPOS QUE USAN CALENDARIO
+// =====================================================
+const camposFecha = new Set(["fecha"]);
+
+
+// =====================================================
+// CAMPOS QUE USAN CALENDARIO
+// =====================================================
+const camposDefault: Record<string, any> = {
+  observaciones: "pendiente"  //implementado para la asistencia en participaciones{"observaciones"
+};
+
+
 
 // =====================================================
 // PARA CADA ENDPOINT: qué propiedad usar como texto
 // =====================================================
 const selectLabel: Record<string, string> = {
+  scout:"apodo",
   sedes: "nombre",
   grupo: "denominacion",
   comunidades: "actividadPrincipal"
@@ -93,13 +113,14 @@ export function DynamicForm({
       return;
     }
 
-    const payload: Record<string, any> = {};
+     // payload = valores del form + cualquier initialValue que falte
+  const payload: Record<string, any> = { ...initialData, ...form };
 
     fields.forEach(campo => {
       payload[campo] = form[campo] ?? null;
     });
 
-    //console.log(" Payload enviado:", payload);  
+    console.log(" Payload enviado:", payload);  
 
     onSubmit(payload);
   }
@@ -107,41 +128,76 @@ export function DynamicForm({
   // =====================================================
   // Render
   // =====================================================
-  const campos = schemaPost[vistaActual];
 
-  return (
-    <form onSubmit={handleSubmit}>
-      {campos.map(campo => (
+const campos = schemaPost[vistaActual];
+
+return (
+  <form onSubmit={handleSubmit}>
+
+    {campos.map(campo => {
+
+      // 1️⃣ Campo default → no se muestra
+      if (camposDefault[campo] !== undefined) {
+        return null;
+      }
+
+      return (
         <div key={campo} className="mb-3">
           <label className="form-label">{campo}</label>
 
-          {/* Si el campo es SELECT */}
+          {/* SELECT */}
           {camposSelect[campo] ? (
-            <select
-              className="form-select"
+            campo === "graduacion" ? (
+              <select
+                className="form-select"
+                name={campo}
+                value={form[campo] ?? ""}
+                onChange={handleChange}
+              >
+                <option value="">...</option>
+                {opciones[campo]?.map((g: string) => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+            ) : (
+              <select
+                className="form-select"
+                name={campo}
+                value={form[campo] ?? ""}
+                onChange={handleChange}
+              >
+                <option value="">...</option>
+                {opciones[campo]?.map((opt: any) => {
+                  const id = opt.codigo || opt.id || opt.numero;
+                  const texto =
+                   opt.apodo||
+                    opt.nombre ||
+                    opt.denominacion ||
+                    opt.actividadPrincipal; 
+                   
+
+                  return (
+                    <option key={id} value={id}>
+                      {texto}
+                    </option>
+                  );
+                })}
+              </select>
+            )
+          ) : camposFecha.has(campo) ? (
+
+            // 2️⃣ FECHA
+            <input
+              type="date"
+              className="form-control"
               name={campo}
               value={form[campo] ?? ""}
               onChange={handleChange}
-            >
-              <option value="">...</option>
+            />
 
-              {campo === "graduacion"
-                ? (
-                    opciones[campo]?.map((g: string) => (
-                      <option key={g} value={g}>{g}</option>
-                    ))
-                  )
-                : (
-                    opciones[campo]?.map((opt: any) => {
-                     const id = opt.codigo || opt.id || opt.numero; // según lo que use el backend
-  const texto = opt.nombre || opt.denominacion || opt.actividadPrincipal;
-  return <option key={id} value={id}>{texto}</option>
-                    }
-                  )
-                  )}
-
-            </select>
           ) : (
+
+            // 3️⃣ TEXTO
             <input
               type="text"
               className="form-control"
@@ -149,14 +205,17 @@ export function DynamicForm({
               value={form[campo] ?? ""}
               onChange={handleChange}
             />
+
           )}
-
         </div>
-      ))}
+      );
+    })}
 
-      <button type="submit" className="btn btn-primary">
-        Guardar
-      </button>
-    </form>
-  );
+    <button type="submit" className="btn btn-primary">
+      Guardar
+    </button>
+
+  </form>
+);
+
 }

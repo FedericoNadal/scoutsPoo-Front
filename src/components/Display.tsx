@@ -15,6 +15,8 @@ export function Display({ vistaActual }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [formMode, setFormMode] = useState<"create" | "edit">("create");
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
+  const [vistaModal, setVistaModal] = useState<string | null>(null);
+
 
   // Cargar datos
   const cargarDatos = async () => {
@@ -34,24 +36,24 @@ export function Display({ vistaActual }: Props) {
   }, [vistaActual]);
 
   // Eliminar fila
- function handleDelete(fila: Record<string, any>) {
-  if (!confirm("¿Seguro que querés eliminar el registro?")) return;
+  function handleDelete(fila: Record<string, any>) {
+    if (!confirm("¿Seguro que querés eliminar el registro?")) return;
 
-  // Tomamos el primer campo de la fila como ID dinámico
-  const keys = Object.keys(fila);
-  const idKey = keys[0];       // 'id', 'codigo', 'numero', etc.
-  const id = fila[idKey];
+    // Tomamos el primer campo de la fila como ID dinámico
+    const keys = Object.keys(fila);
+    const idKey = keys[0];       // 'id', 'codigo', 'numero', etc.
+    const id = fila[idKey];
 
-  api.delete(`/${vistaActual}/${id}`)
-    .then(() => {
-      // Filtramos la fila eliminada del estado para forzar re-render
-      setData(prev => prev.filter(f => f[idKey] !== id));
-    })
-    .catch(err => {
-      console.error("Error eliminando elemento:", err);
-      alert("No se pudo eliminar el elemento.");
-    });
-}
+    api.delete(`/${vistaActual}/${id}`)
+      .then(() => {
+        // Filtramos la fila eliminada del estado para forzar re-render
+        setData(prev => prev.filter(f => f[idKey] !== id));
+      })
+      .catch(err => {
+        console.error("Error eliminando elemento:", err);
+        alert("No se pudo eliminar el elemento.");
+      });
+  }
 
 
   // Cabecera dinámica
@@ -77,6 +79,7 @@ export function Display({ vistaActual }: Props) {
               className="btn btn-success btn-sm"
               onClick={() => {
                 setFormMode("create");
+                setVistaModal(vistaActual); // formulario normal
                 setInitialValues({});
                 setShowModal(true);
               }}
@@ -138,73 +141,99 @@ export function Display({ vistaActual }: Props) {
 
   if (loading) return <p className="text-light">Cargando...</p>;
 
-  return (
-    <>
-      <table className="table table-dark table-striped">
-        <thead>{renderHead()}</thead>
-        <tbody>
-          {data.map((fila, i) => (
-            <tr key={i}>
-              {renderFila(fila)}
-              <td>
-                {vistaActual === "actividades" && (
-                  <>
-                    <button className="btn btn-primary btn-sm me-1">
-                      TOMAR ASISTENCIAS
-                    </button>
-                    <button className="btn btn-secondary btn-sm me-1">
-                      INSCRIPCIONES
-                    </button>
-                  </>
-                )}
-                <button
-                  className="btn btn-warning btn-sm me-1"
-                  onClick={() => {
-                    setFormMode("edit");
-                    setInitialValues(fila);
-                    setShowModal(true);
-                  }}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(fila)}
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+ return (
+  <>
+    <table className="table table-dark table-striped">
+      <thead>{renderHead()}</thead>
+      <tbody>
+        {data.map((fila, i) => (
+          <tr key={i}>
+            {renderFila(fila)}
+            <td>
+              {vistaActual === "actividades" && (
+                <>
+                  <button className="btn btn-primary btn-sm me-1">
+                    TOMAR ASISTENCIAS
+                  </button>
 
-      {/* Modal dinámico */}
-      {showModal && (
-        <FormModal
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          title={formMode === "create" ? `Nueva ${vistaActual}` : `Editar ${vistaActual}`}
-        >
-          <DynamicForm
-            vistaActual={vistaActual}
-            initialData={initialValues}
-            onSubmit={async (formData) => {
-              try {
-                if (formMode === "create") {
-                  await api.post(`/${vistaActual}`, formData);
-                } else {
-                  await api.put(`/${vistaActual}/${initialValues.id}`, formData);
-                }
-                await cargarDatos();
-                setShowModal(false);
-              } catch (err) {
-                console.error("Error guardando formulario:", err);
+                  <button
+                    className="btn btn-secondary btn-sm me-1"
+                    onClick={() => {
+                      setFormMode("create");
+                      setVistaModal("participaciones");
+                      setInitialValues({
+                        actividadId: fila.id,
+                        observaciones: "pendiente"
+                      });
+                      setShowModal(true);
+                    }}
+                  >
+                    INSCRIPCIONES
+                  </button>
+                </>
+              )}
+
+              <button
+                className="btn btn-warning btn-sm me-1"
+                onClick={() => {
+                  setFormMode("edit");
+                  setVistaModal(null);
+                  setInitialValues(fila);
+                  setShowModal(true);
+                }}
+              >
+                Editar
+              </button>
+
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => handleDelete(fila)}
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    {/* MODAL ÚNICO */}
+    {showModal && (
+      <FormModal
+        show={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setVistaModal(null);
+        }}
+        title={
+          formMode === "create"
+            ? `Nueva ${vistaModal ?? vistaActual}`
+            : `Editar ${vistaModal ?? vistaActual}`
+        }
+      >
+        <DynamicForm
+          vistaActual={vistaModal ?? vistaActual}
+          initialData={initialValues}
+          onSubmit={async (formData) => {
+            try {
+              const endpoint = vistaModal ?? vistaActual;
+
+              if (formMode === "create") {
+                await api.post(`/${endpoint}`, formData);
+              } else {
+                await api.put(`/${endpoint}/${initialValues.id}`, formData);
               }
-            }}
-          />
-        </FormModal>
-      )}
-    </>
-  );
+
+              await cargarDatos();
+              setShowModal(false);
+              setVistaModal(null);
+            } catch (err) {
+              console.error("Error guardando formulario:", err);
+            }
+          }}
+        />
+      </FormModal>
+    )}
+  </>
+);
 }
