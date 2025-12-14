@@ -17,7 +17,23 @@ export function Display({ vistaActual }: Props) {
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
   const [vistaModal, setVistaModal] = useState<string | null>(null);
 
+  const editableFieldsMap: Record<string, string[]> = {
+  comunidades: ["actividadPrincipal"],
+  
+  grupo:["descripcion"],
+  sedes :["nombre","direccion","provincia","localidad"],
+  scouts:["nombre","apellido","graduacion"],
+  actividades: ["descripcion"],
+  participaciones: ["observaciones"],
 
+};
+
+
+//[
+/// "grupo":{"descripcion":Sting},
+//
+//"participacion":{"scoutId": id, "actividadId": id,"fecha":date, "observaciones": string}
+//"usuario": not yet implemented
   // Cargar datos
   const cargarDatos = async () => {
     setLoading(true);
@@ -139,6 +155,17 @@ export function Display({ vistaActual }: Props) {
     }
   };
 
+
+  //fitrar payload del update
+const buildUpdatePayload = (vista: string, data: any) => {
+  const allowed = editableFieldsMap[vista] ?? [];
+  return Object.fromEntries(
+    Object.entries(data).filter(([key]) => allowed.includes(key))
+  );
+};
+
+
+
   if (loading) return <p className="text-light">Cargando...</p>;
 
  return (
@@ -199,7 +226,8 @@ export function Display({ vistaActual }: Props) {
 
     {/* MODAL ÚNICO */}
     {showModal && (
-      <FormModal
+      <
+        FormModal
         show={showModal}
         onClose={() => {
           setShowModal(false);
@@ -211,6 +239,8 @@ export function Display({ vistaActual }: Props) {
             : `Editar ${vistaModal ?? vistaActual}`
         }
       >
+
+
         <DynamicForm
           vistaActual={vistaModal ?? vistaActual}
           initialData={initialValues}
@@ -221,7 +251,10 @@ export function Display({ vistaActual }: Props) {
               if (formMode === "create") {
                 await api.post(`/${endpoint}`, formData);
               } else {
-                await api.put(`/${endpoint}/${initialValues.id}`, formData);
+                 const payload = buildUpdatePayload(endpoint, formData);
+                 console.log(payload);
+                 console.log(initialValues.id||initialValues.numero||initialValues.codigo);
+                await api.put(`/${endpoint}/${initialValues.id||initialValues.numero||initialValues.codigo}`, payload);
               }
 
               await cargarDatos();
@@ -237,3 +270,16 @@ export function Display({ vistaActual }: Props) {
   </>
 );
 }
+
+//campos EDITABLES
+//[
+//"actvidad":{"descripcion":string},
+// "comunidad":"actividadPrincipal" :string},
+// "grupo":{"descripcion":Sting},
+// "sede":{"nombre" : "Bibilioteca Sta.Esterlita de Galilea", "direccion": "calle falsa 123", "provincia" : "bsas","localidad":"Merlo"}
+//
+//"scout":{"graduacion" : string (select) ERROR! recibe multiples campos que no deberian ser editables!Corregir desde back:
+//"sede":{"nombre" : "Bibilioteca Sta.Esterlita de Galilea", "direccion": "calle falsa 123", "provincia" : "bsas","localidad":"Merlo"}
+//"participacion":{"scoutId": id, "actividadId": id,"fecha":date, "observaciones": string}
+//"usuario": not yet implemented
+//]
