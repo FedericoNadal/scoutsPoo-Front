@@ -7,7 +7,7 @@ import { Header } from "./components/Header";
 import MenuSuperior from "./components/MenuSuperior";
 
 export default function App() {
-  const [vistaActual, setVistaActual] = useState("sedes");
+  const [vistaActual, setVistaActual] = useState("actividades");
   const [menuOpen, setMenuOpen] = useState(true); // estado del menú
 
   return (

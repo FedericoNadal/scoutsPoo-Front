@@ -115,6 +115,7 @@ export function DynamicForm({
 
      // payload = valores del form + cualquier initialValue que falte
   const payload: Record<string, any> = { ...initialData, ...form };
+  
 
     fields.forEach(campo => {
       payload[campo] = form[campo] ?? null;
@@ -136,7 +137,7 @@ return (
 
     {campos.map(campo => {
 
-      // 1️⃣ Campo default → no se muestra
+      //  Campo default → no se muestra
       if (camposDefault[campo] !== undefined) {
         return null;
       }
@@ -186,7 +187,7 @@ return (
             )
           ) : camposFecha.has(campo) ? (
 
-            // 2️⃣ FECHA
+            // FECHA
             <input
               type="date"
               className="form-control"
@@ -197,7 +198,7 @@ return (
 
           ) : (
 
-            // 3️⃣ TEXTO
+            //  TEXTO
             <input
               type="text"
               className="form-control"
