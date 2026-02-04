@@ -8,7 +8,7 @@ import MenuSuperior from "./components/MenuSuperior";
 
 export default function App() {
   const [vistaActual, setVistaActual] = useState("actividades");
-  const [menuOpen, setMenuOpen] = useState(true); // estado del menú
+  const [menuOpen, setMenuOpen] = useState(false); // estado del menú
 
   return (
     <div className="container-fluid">
@@ -26,12 +26,12 @@ export default function App() {
         </button>
       <div className="row">
         {menuOpen && (
-          <div className="col-2">
+          <div className="col-md-3 col-12">
             <MenuLateral setVistaActual={setVistaActual} toggleMenu={setMenuOpen} />
           </div>
         )}
 
-        <div className={menuOpen? "col-md-10" : "col-12"}>
+        <div className={menuOpen? "col-md-9" : "col-12"}>
           <Display vistaActual={vistaActual} />
         </div>
       </div>

@@ -85,7 +85,6 @@ export function Display({ vistaActual }: Props) {
         <tr>
           <th>Scout</th>
           <th>Fecha</th>
-          <th>Estado</th>
           <th>Observaciones</th>
           <th>
             <button
@@ -142,7 +141,6 @@ export function Display({ vistaActual }: Props) {
         <>
           <td>{fila.scout?.apodo ?? "—"}</td>
           <td>{fila.fecha}</td>
-          <td>{fila.estado ?? "pendiente"}</td>
           <td>{fila.observaciones}</td>
         </>
       );
@@ -225,7 +223,22 @@ export function Display({ vistaActual }: Props) {
                         setModoAsistencia(true);
                       }}
                     >
-                      TOMAR ASISTENCIAS
+                       {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
+
+
+                        {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
+                         {'\u{200D}'}{/* ASISTENCIAS - emoji lista */}
+                         {'\u{2640}'}{/* ASISTENCIAS - emoji lista */}
+                          {'\u{FE0F}'}{/* ASISTENCIAS - emoji lista */} 
+                            
+                       {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
+
+                        {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
+                         {'\u{200D}'}{/* ASISTENCIAS - emoji lista */}
+                         {'\u{2642}'}{/* ASISTENCIAS - emoji lista */}
+                          {'\u{FE0F}'}{/* ASISTENCIAS - emoji lista */}
+
+                     {'\u{1F4DD}'}{/* ASISTENCIAS - emoji lista */} 
                     </button>
 
 
@@ -241,7 +254,9 @@ export function Display({ vistaActual }: Props) {
                         setShowModal(true);
                       }}
                     >
-                      INSCRIPCIONES
+                       + {'\u{1F464}'}{/* INSCRIPCIONES - emoji +personita */} 
+                       
+                      
                     </button>
                   </>
                 )}
@@ -258,33 +273,33 @@ export function Display({ vistaActual }: Props) {
                         setShowModal(true);
                       }}
                     >
-                      Editar
+                    {'\u270E'}{/* EDITAR - emoji lapiz */} 
                     </button>
+
 
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleDelete(fila)}
                     >
-                      Eliminar
+                   {'\u{1F5D1}'} {/* BORRAR - emoji cesto */} 
                     </button>
                   </>
                 )}
 
-
-                ///////////////////////////////////////////////
-                    MODO ASISTENCIA
-                ///////////////////////////////////////////////
-
                 {modoAsistencia && (
-                  <button className="btn btn-success btn-sm">
-                    Marcar presente
-                  </button>
+                  
+                 <input type="checkbox" name="option_name" value="option_value">
+</input>
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+     
+
+
 
       {/* MODAL ÚNICO */}
       {showModal && (
@@ -297,7 +312,7 @@ export function Display({ vistaActual }: Props) {
           }}
           title={
             formMode === "create"
-              ? `Nueva ${vistaModal ?? vistaActual}`
+              ? `+ ${vistaModal ?? vistaActual}`
               : `Editar ${vistaModal ?? vistaActual}`
           }
         >
