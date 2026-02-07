@@ -22,7 +22,6 @@ export function Display({ vistaActual }: Props) {
 
   const editableFieldsMap: Record<string, string[]> = {
     comunidades: ["actividadPrincipal"],
-
     grupo: ["descripcion"],
     sedes: ["nombre", "direccion", "provincia", "localidad"],
     scouts: ["nombre", "apellido", "graduacion"],
@@ -84,7 +83,6 @@ export function Display({ vistaActual }: Props) {
       return (
         <tr>
           <th>Scout</th>
-          <th>Fecha</th>
           <th>Observaciones</th>
           <th>
             <button
@@ -101,7 +99,7 @@ export function Display({ vistaActual }: Props) {
       );
     }
     const columnasMap: Record<string, string[]> = {
-      actividades: ["ID", "Descripcion", "Inscriptos"],
+      actividades: ["ID", "Descripcion","Fecha", "Inscriptos"],
       sedes: ["COD", "Nombre", "Dirección"],
       comunidades: ["Num", "Act. Principal"],
       grupo: ["Cod.", "Denominación"],
@@ -140,7 +138,7 @@ export function Display({ vistaActual }: Props) {
       return (
         <>
           <td>{fila.scout?.apodo ?? "—"}</td>
-          <td>{fila.fecha}</td>
+          
           <td>{fila.observaciones}</td>
         </>
       );
@@ -151,6 +149,7 @@ export function Display({ vistaActual }: Props) {
           <>
             <td>{fila.id}</td>
             <td>{fila.descripcion}</td>
+            <td>{fila.fecha}</td>
             <td>{fila.participaciones?.length ?? 0}</td>
           </>
         );
@@ -286,11 +285,11 @@ export function Display({ vistaActual }: Props) {
                   </>
                 )}
 
-                {modoAsistencia && (
-                  
+                {modoAsistencia && (                
                  <input type="checkbox" name="option_name" value="option_value">
 </input>
                 )}
+                 
               </td>
             </tr>
           ))}

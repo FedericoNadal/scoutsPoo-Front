@@ -8,9 +8,9 @@ const schemaPost: Record<string, string[]> = {
   sedes: ["nombre", "direccion", "provincia", "localidad"],
   comunidades: ["actividadPrincipal"],
   grupo: ["denominacion"],
-  actividades: ["descripcion"],
+  actividades: ["descripcion","fecha"],
   scouts: ["apodo", "nombre", "apellido", "graduacion", "idSede", "idGrupo", "idComunidad"],
-  participaciones :["scoutId","fecha"]
+  participaciones :["scoutId"]
 };
 
 // =====================================================
