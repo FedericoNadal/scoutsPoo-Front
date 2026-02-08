@@ -21,7 +21,6 @@ const camposSelect: Record<string, string | null> = {
   idSede: "/sedes",
   idGrupo: "/grupo",
   idComunidad: "/comunidades",
-
   scoutId: "/scouts",
   actividadId: "/actividades"
 };

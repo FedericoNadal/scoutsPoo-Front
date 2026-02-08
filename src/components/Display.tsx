@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "./api/axiosConfig";
 import { FormModal } from "./FormModal";
 import { DynamicForm } from "./DynamicForm";
+import BotoneraObservaciones from './BotoneraObservaciones';
 
 type Fila = Record<string, any>;
 
@@ -19,6 +20,27 @@ export function Display({ vistaActual }: Props) {
   const [actividadSeleccionada, setActividadSeleccionada] = useState<number | null>(null);
   const [modoAsistencia, setModoAsistencia] = useState(false);
 
+  const handleCambioObservacion = async (
+    participacionId: number,
+    observacion: string
+  ) => {
+    try {
+      await api.put(`/participaciones/${participacionId}`, {
+        observaciones: observacion
+      });
+
+      // update optimista
+      setData(prev =>
+        prev.map(p =>
+          p.id === participacionId
+            ? { ...p, observaciones: observacion }
+            : p
+        )
+      );
+    } catch (e) {
+      console.error("Error actualizando observación", e);
+    }
+  };
 
   const editableFieldsMap: Record<string, string[]> = {
     comunidades: ["actividadPrincipal"],
@@ -86,7 +108,7 @@ export function Display({ vistaActual }: Props) {
           <th>Observaciones</th>
           <th>
             <button
-              className="btn btn-outline-secondary btn-sm"
+              className="btn btn-outline-primary btn-sm"
               onClick={() => {
                 setModoAsistencia(false);
                 setActividadSeleccionada(null);
@@ -94,12 +116,17 @@ export function Display({ vistaActual }: Props) {
             >
               ← Volver
             </button>
+
+            <button className="btn btn-outline-primary btn-sm"> 
+             {"\u{1F5A8}"}   imprimir</button>
           </th>
         </tr>
       );
+
+
     }
     const columnasMap: Record<string, string[]> = {
-      actividades: ["ID", "Descripcion","Fecha", "Inscriptos"],
+      actividades: ["ID", "Descripcion", "Fecha", "Inscriptos"],
       sedes: ["COD", "Nombre", "Dirección"],
       comunidades: ["Num", "Act. Principal"],
       grupo: ["Cod.", "Denominación"],
@@ -138,7 +165,7 @@ export function Display({ vistaActual }: Props) {
       return (
         <>
           <td>{fila.scout?.apodo ?? "—"}</td>
-          
+
           <td>{fila.observaciones}</td>
         </>
       );
@@ -222,22 +249,22 @@ export function Display({ vistaActual }: Props) {
                         setModoAsistencia(true);
                       }}
                     >
-                       {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
+                      {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */}
 
 
-                        {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
-                         {'\u{200D}'}{/* ASISTENCIAS - emoji lista */}
-                         {'\u{2640}'}{/* ASISTENCIAS - emoji lista */}
-                          {'\u{FE0F}'}{/* ASISTENCIAS - emoji lista */} 
-                            
-                       {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
+                      {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{200D}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{2640}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{FE0F}'}{/* ASISTENCIAS - emoji lista */}
 
-                        {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */} 
-                         {'\u{200D}'}{/* ASISTENCIAS - emoji lista */}
-                         {'\u{2642}'}{/* ASISTENCIAS - emoji lista */}
-                          {'\u{FE0F}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */}
 
-                     {'\u{1F4DD}'}{/* ASISTENCIAS - emoji lista */} 
+                      {'\u{1F9CD}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{200D}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{2642}'}{/* ASISTENCIAS - emoji lista */}
+                      {'\u{FE0F}'}{/* ASISTENCIAS - emoji lista */}
+
+                      {'\u{1F4DD}'}{/* ASISTENCIAS - emoji lista */}
                     </button>
 
 
@@ -253,9 +280,9 @@ export function Display({ vistaActual }: Props) {
                         setShowModal(true);
                       }}
                     >
-                       + {'\u{1F464}'}{/* INSCRIPCIONES - emoji +personita */} 
-                       
-                      
+                      + {'\u{1F464}'}{/* INSCRIPCIONES - emoji +personita */}
+
+
                     </button>
                   </>
                 )}
@@ -272,7 +299,7 @@ export function Display({ vistaActual }: Props) {
                         setShowModal(true);
                       }}
                     >
-                    {'\u270E'}{/* EDITAR - emoji lapiz */} 
+                      {'\u270E'}{/* EDITAR - emoji lapiz */}
                     </button>
 
 
@@ -280,23 +307,31 @@ export function Display({ vistaActual }: Props) {
                       className="btn btn-danger btn-sm"
                       onClick={() => handleDelete(fila)}
                     >
-                   {'\u{1F5D1}'} {/* BORRAR - emoji cesto */} 
+                      {'\u{1F5D1}'} {/* BORRAR - emoji cesto */}
                     </button>
                   </>
                 )}
 
-                {modoAsistencia && (                
-                 <input type="checkbox" name="option_name" value="option_value">
-</input>
+                {modoAsistencia && (
+                  <div>
+                    <BotoneraObservaciones
+                      valorInicial={fila.observaciones ?? ""}
+                      onChange={(valor) =>
+                        handleCambioObservacion(fila.id, valor)
+                      }
+                    />
+                    
+                  </div> 
                 )}
                  
-              </td>
-            </tr>
+             </td>
+                    
+                </tr>
           ))}
         </tbody>
       </table>
 
-     
+
 
 
 
