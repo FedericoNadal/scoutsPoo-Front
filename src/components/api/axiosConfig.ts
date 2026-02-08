@@ -12,7 +12,16 @@ const API_URL = isLocalhost
   ? 'http://localhost:8080'  // Desarrollo local
   : `http://${window.location.hostname}:8080`; // Desde la red
 
+  
+
 export const api = axios.create({
   baseURL: API_URL,
 });
 
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
