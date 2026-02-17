@@ -4,6 +4,7 @@ import axios from "axios";
 // Detecta automáticamente si estamos en localhost o en la red
 //Si accedes desde http://localhost:5173, usará localhost:8080
 //Si accedes desde http://192.168.1.50:5173, usará 192.168.1.50:8080
+// abrir con npm run dev -- --host
 
 const isLocalhost = window.location.hostname === 'localhost' || 
                     window.location.hostname === '127.0.0.1';

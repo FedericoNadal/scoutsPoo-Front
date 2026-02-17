@@ -6,23 +6,23 @@ type LoginFormProps = {
 };
 
 const LoginForm = ({ onSuccess }: LoginFormProps) => {
-  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    await login(userName, password);
     onSuccess();
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
-        <label>Email</label>
+        <label>Apodo</label>
         <input
           className="form-control"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          value={userName}
+          onChange={e => setUserName(e.target.value)}
         />
       </div>
 
