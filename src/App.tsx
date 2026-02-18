@@ -5,6 +5,7 @@ import { Display } from "./components/Display";
 import { Nav } from "./components/Nav";
 import { Header } from "./components/Header";
 import MenuSuperior from "./components/MenuSuperior";
+import CarouselPublico from "./components/CarruselPublico";
 
 export default function App() {
   const [vistaActual, setVistaActual] = useState("actividades");
@@ -14,7 +15,8 @@ export default function App() {
     <div className="container-fluid">
       <Nav />
       <Header />
-   
+      <CarouselPublico />
+               
       <button
           className="btn btn-outline-secondary btn-sm"
           onClick={menuOpen ?

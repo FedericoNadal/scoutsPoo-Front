@@ -1,18 +1,32 @@
 import { useState } from "react";
-import { login } from "./authService";
+import { useAuth } from "./AuthContext";
+import { api } from "../components/api/axiosConfig";
 
 type LoginFormProps = {
   onSuccess: () => void;
 };
 
 const LoginForm = ({ onSuccess }: LoginFormProps) => {
-  const [userName, setUserName] = useState("");
+  const { login } = useAuth(); // ✅ AHORA ESTÁ BIEN
+
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await login(userName, password);
-    onSuccess();
+    e.preventDefault(); // 🔥 IMPORTANTE
+
+    try {
+      const res = await api.post("/auth/login", {
+        username,
+        password,
+      });
+
+      login(res.data.token); // 🔥 actualiza contexto
+      onSuccess();           // cerrar offcanvas
+      
+    } catch (error) {
+      console.error("Error login", error);
+    }
   };
 
   return (
@@ -21,8 +35,8 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         <label>Apodo</label>
         <input
           className="form-control"
-          value={userName}
-          onChange={e => setUserName(e.target.value)}
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </div>
 
@@ -32,11 +46,11 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
           className="form-control"
           type="password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
 
-      <button className="nav-login-btn w-100">
+      <button type="submit" className="nav-login-btn w-100">
         Entrar
       </button>
     </form>
@@ -44,4 +58,3 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
 };
 
 export default LoginForm;
-

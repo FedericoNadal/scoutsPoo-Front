@@ -1,10 +1,13 @@
+import { useAuth } from "../auth/AuthContext";
 
 type Props = {
   setVistaActual: (v: string) => void;
 };
 
 export default function MenuLateral({ setVistaActual }: Props) {
-
+  const { user } = useAuth();
+  if (!user) return null;
+  
   return (
      <div className="d-md-none">
     <ul className="list-group">

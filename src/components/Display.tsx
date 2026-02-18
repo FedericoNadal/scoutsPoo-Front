@@ -3,6 +3,7 @@ import { api } from "./api/axiosConfig";
 import { FormModal } from "./FormModal";
 import { DynamicForm } from "./DynamicForm";
 import BotoneraObservaciones from './BotoneraObservaciones';
+import { useAuth } from "../auth/AuthContext";
 
 type Fila = Record<string, any>;
 
@@ -228,9 +229,11 @@ export function Display({ vistaActual }: Props) {
   };
 
 
-
+  const { user } = useAuth();
   if (loading) return <p className="text-light">Cargando...</p>;
-
+  
+  if (!user) return null;
+ 
   return (
     <>
       <table className="table table-dark table-striped">

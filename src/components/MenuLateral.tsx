@@ -1,9 +1,14 @@
+import { useAuth } from "../auth/AuthContext";
+
 type Props = {
   setVistaActual: (v: string) => void;  // Permite cambiar la vista en el Display
   toggleMenu: (open: boolean) => void;  // Permite abrir/cerrar el menú lateral
 };
 
 export function MenuLateral({ setVistaActual, toggleMenu }: Props) {
+    const { user } = useAuth();
+  
+    if (!user) return null;
   return (
     <ul className="list-group">
    

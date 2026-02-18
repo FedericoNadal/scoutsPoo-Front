@@ -1,21 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Offcanvas } from 'react-bootstrap';
 import LoginForm from '../auth/LoginForm';
+import { useAuth } from '../auth/AuthContext';
+
 
 export function Nav() {
   const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    window.location.reload(); 
-  };
+  const { user, logout } = useAuth();
 
   return (
     <nav className="Nav">
@@ -28,10 +19,10 @@ export function Nav() {
         </a>
       </div>
 
-      {isLoggedIn ? (
+      {user ? (
         <Button
           className="nav-login-btn"
-          onClick={handleLogout}
+          onClick={logout}
         >
           Cerrar Sesión
         </Button>
@@ -44,25 +35,26 @@ export function Nav() {
         </Button>
       )}
 
-      <Offcanvas
-        show={showLogin}
-        onHide={() => setShowLogin(false)}
-        placement="end"
-      >
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Iniciar Sesión</Offcanvas.Title>
-         </Offcanvas.Header>
+      {!user && (
+        <Offcanvas
+          show={showLogin}
+          onHide={() => setShowLogin(false)}
+          placement="end"
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Iniciar Sesión</Offcanvas.Title>
+          </Offcanvas.Header>
 
-        <Offcanvas.Body>
-          <LoginForm
-            onSuccess={() => {
-              setShowLogin(false);
-              window.location.reload();
-              setIsLoggedIn(true);
-            }}
-          />
-        </Offcanvas.Body>
-      </Offcanvas>
+          <Offcanvas.Body>
+            <LoginForm
+              onSuccess={() => {
+                setShowLogin(false);
+                window.location.reload();
+              }}
+            />
+          </Offcanvas.Body>
+        </Offcanvas>
+      )}
     </nav>
   );
 }
