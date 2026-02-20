@@ -23,7 +23,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
       login(res.data.token); // 🔥 actualiza contexto
       onSuccess();           // cerrar offcanvas
-      
+
     } catch (error) {
       console.error("Error login", error);
     }
@@ -53,6 +53,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
       <button type="submit" className="nav-login-btn w-100">
         Entrar
       </button>
+      
     </form>
   );
 };

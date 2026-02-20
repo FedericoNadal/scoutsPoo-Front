@@ -9,6 +9,7 @@ export function Nav() {
   const { user, logout } = useAuth();
 
   return (
+    
     <nav className="Nav">
       <div className="nav-links">
         <a href="https://scouts.org.ar/" className="nav-item">
@@ -33,6 +34,7 @@ export function Nav() {
         >
           Iniciar Sesión
         </Button>
+        
       )}
 
       {!user && (

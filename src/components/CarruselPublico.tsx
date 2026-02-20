@@ -16,8 +16,10 @@ export default function CarouselPublico() {
           alt="Primera slide"
         />
         <Carousel.Caption>
-          <h3>Bienvenido</h3>
-          <p>Sistema de gestión scout</p>
+         <h3>LEY SCOUT</h3>
+         <p>El/La Scout ama a Dios y vive plenamente su Fe.<br />
+          El/La Scout es leal y digno/a de toda confianza.<br />
+         </p>
         </Carousel.Caption>
       </Carousel.Item>
 
@@ -28,8 +30,9 @@ export default function CarouselPublico() {
           alt="Segunda slide"
         />
         <Carousel.Caption>
-          <h3>Organizá tus actividades</h3>
-          <p>Gestioná comunidades y sedes fácilmente</p>
+         <h3>LEY SCOUT</h3>
+          <p> El/La Scout es generoso/a, cortés y solidario/a.<br />
+    El/La Scout es respetuoso/a y hermano/a de todos.</p>
         </Carousel.Caption>
       </Carousel.Item>
 
@@ -40,8 +43,9 @@ export default function CarouselPublico() {
           alt="Tercera slide"
         />
         <Carousel.Caption>
-          <h3>Acceso por roles</h3>
-          <p>Permisos diferenciados según perfil</p>
+          <h3>LEY SCOUT</h3>
+          <p> El/La Scout defiende y valora la familia.<br />
+            El/La Scout ama y defiende la vida y la naturaleza.</p>
         </Carousel.Caption>
       </Carousel.Item>
 
@@ -52,12 +56,29 @@ export default function CarouselPublico() {
           alt="Tercera slide"
         />
         <Carousel.Caption>
-          <h3>Trabajo final para Programacion 2 - INSPT-UTN</h3>
-          <p>:)</p>
+           <h3>LEY SCOUT</h3>
+          <p> El/La Scout sabe obedecer, elige y actúa con responsabilidad.<br />
+    El/La Scout es optimista aún en las dificultades.</p>
         </Carousel.Caption>
       </Carousel.Item>
 
+<Carousel.Item>
+        <img
+          className="d-block w-100"
+        src="src/components/Images/foto5Scouts.png"
+          alt="Tercera slide"
+        />
+        <Carousel.Caption>
+           <h3>LEY SCOUT</h3>
+          <p>  El/La Scout es económico/a, trabajador/a y respetuoso/a del bien ajeno.<br />
+    El/La Scout es puro/a y lleva una vida sana.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
 
     </Carousel>
   );
 }
+
+   
+   
+  
