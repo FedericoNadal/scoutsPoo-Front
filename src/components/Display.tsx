@@ -44,11 +44,11 @@ export function Display({ vistaActual }: Props) {
   };
 
   const editableFieldsMap: Record<string, string[]> = {
+    actividades: ["descripcion"],
     comunidades: ["actividadPrincipal"],
     grupo: ["descripcion"],
     sedes: ["nombre", "direccion", "provincia", "localidad"],
     scouts: ["nombre", "apellido", "graduacion"],
-    actividades: ["descripcion"],
     participaciones: ["observaciones"],
 
   };
@@ -57,8 +57,10 @@ export function Display({ vistaActual }: Props) {
     setLoading(true);
     try {
       let res;
-
-      if (modoAsistencia && actividadSeleccionada) {
+    if (vistaActual === "misActividades") {
+      res = await api.get("/actividades/misActividades");
+      console.log("misActividades:", res.data);
+    } else if (modoAsistencia && actividadSeleccionada) {
         res = await api.get(
           `/actividades/${actividadSeleccionada}/participaciones`
         );
@@ -127,6 +129,7 @@ export function Display({ vistaActual }: Props) {
 
     }
     const columnasMap: Record<string, string[]> = {
+      misActividades: ["ID", "Descripcion", "Fecha", "Observaciones"],
       actividades: ["ID", "Descripcion", "Fecha", "Inscriptos"],
       sedes: ["COD", "Nombre", "Dirección"],
       comunidades: ["Num", "Act. Principal"],
@@ -172,6 +175,15 @@ export function Display({ vistaActual }: Props) {
       );
     }
     switch (vistaActual) {
+      case "misActividades":
+        return (
+          <>
+            <td>{fila.id}</td>
+            <td>{fila.descripcionActividad}</td>
+            <td>{fila.fechaActividad}</td>
+            <td>{fila.observaciones}</td>
+          </>
+        );
       case "actividades":
         return (
           <>
@@ -243,7 +255,7 @@ export function Display({ vistaActual }: Props) {
             <tr key={i}>
               {renderFila(fila)}
               <td>
-                {!modoAsistencia && vistaActual === "actividades" && (
+                {!modoAsistencia && vistaActual === "actividades" && user.role !== "SCOUT" && (
                   <>
                     <button
                       className="btn btn-primary btn-sm me-1"
@@ -291,7 +303,7 @@ export function Display({ vistaActual }: Props) {
                 )}
 
 
-                {!modoAsistencia && (
+                {!modoAsistencia && vistaActual !== "misActividades" && user.role !== "SCOUT" &&(
                   <>
                     <button
                       className="btn btn-warning btn-sm me-1"

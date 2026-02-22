@@ -6,30 +6,47 @@ type Props = {
 };
 
 export function MenuLateral({ setVistaActual, toggleMenu }: Props) {
-    const { user } = useAuth();
-  
-    if (!user) return null;
+  const { user } = useAuth();
+
+  if (!user) return null;
   return (
     <ul className="list-group">
-   
+
+      {user.role !== "EDUCADOR" && (
+        <li
+          className="list-group-item text-center"
+          onClick={() => setVistaActual("misActividades")}
+        >
+          Mis Actividades
+        </li>
+      )}
       <li className="list-group-item text-center" onClick={() => setVistaActual("actividades")}>
         Actividades
       </li>
-      <li className="list-group-item text-center" onClick={() => setVistaActual("scouts")}>
-        Scouts
-      </li>
-         <li className="list-group-item text-center" onClick={() => setVistaActual("sedes")}>
+
+      {user.role !== "SCOUT" && (
+        <li className="list-group-item text-center" onClick={() => setVistaActual("scouts")}>
+          Scouts
+        </li>
+      )}
+      {user.role !== "SCOUT" && (
+      <li className="list-group-item text-center" onClick={() => setVistaActual("sedes")}>
         Sedes
       </li>
-      <li className="list-group-item text-center" onClick={() => setVistaActual("comunidades")}>
-        Comunidades
-      </li>
-      <li className="list-group-item text-center" onClick={() => setVistaActual("grupo")}>
-        Grupos
-      </li>
+      )}
+      {user.role !== "SCOUT" && (
+        <li className="list-group-item text-center" onClick={() => setVistaActual("comunidades")}>
+          Comunidades
+        </li>
+      )}
+      {user.role !== "SCOUT" && (
+        <li className="list-group-item text-center" onClick={() => setVistaActual("grupo")}>
+          Grupos
+        </li>
+      )}
       <li className="list-group-item text-center">
-        
-        
+
+
       </li>
     </ul>
   );
