@@ -32,7 +32,7 @@ const camposFecha = new Set(["fecha"]);
 
 
 // =====================================================
-// CAMPOS QUE USAN CALENDARIO
+//
 // =====================================================
 const camposDefault: Record<string, any> = {
   observaciones: "pendiente"  //implementado para la asistencia en participaciones{"observaciones"
@@ -70,7 +70,11 @@ export function DynamicForm({
   // =====================================================
   useEffect(() => {
     async function loadOptions() {
-      const entries = Object.entries(camposSelect);
+     const campos = schemaPost[vistaActual];
+
+const entries = campos
+  .filter(campo => camposSelect[campo])
+  .map(campo => [campo, camposSelect[campo]]); //consulta solo campos nesecarios para la vista actual
 
       const results = await Promise.all(
         entries.map(async ([campo, url]) => {
