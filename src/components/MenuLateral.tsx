@@ -29,17 +29,17 @@ export function MenuLateral({ setVistaActual, toggleMenu }: Props) {
           Scouts
         </li>
       )}
-      {user.role !== "SCOUT" && (
+      {user.role == "EDUCADOR" && (
       <li className="list-group-item text-center" onClick={() => setVistaActual("sedes")}>
         Sedes
       </li>
       )}
-      {user.role !== "SCOUT" && (
+      {user.role == "EDUCADOR" && (
         <li className="list-group-item text-center" onClick={() => setVistaActual("comunidades")}>
           Comunidades
         </li>
       )}
-      {user.role !== "SCOUT" && (
+      {user.role == "EDUCADOR" && (
         <li className="list-group-item text-center" onClick={() => setVistaActual("grupo")}>
           Grupos
         </li>

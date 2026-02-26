@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SetStateAction } from "react";
 import { api } from "./api/axiosConfig";
 import { FormModal } from "./FormModal";
 import { DynamicForm } from "./DynamicForm";
 import BotoneraObservaciones from './BotoneraObservaciones';
 import { useAuth } from "../auth/AuthContext";
+import {ScoutParticipaciones} from "./ScoutParticipaciones";
 
 type Fila = Record<string, any>;
 
 interface Props {
   vistaActual: string;
+  setVistaActual: React.Dispatch<React.SetStateAction<string>>;
+
 }
 
-export function Display({ vistaActual }: Props) {
+export function Display({ vistaActual,setVistaActual}: Props) {
   const [data, setData] = useState<Fila[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -54,6 +57,11 @@ export function Display({ vistaActual }: Props) {
   };
 
   const cargarDatos = async () => {
+    if (vistaActual.startsWith("scoutParticipaciones-")) {
+    return; 
+  }
+  setLoading(true);
+
     setLoading(true);
     try {
       let res;
@@ -217,8 +225,9 @@ export function Display({ vistaActual }: Props) {
         );
       case "scouts":
         return (
-          <>
-            <td>{fila.id}</td>
+           <>
+            <td><button className="btn btn-outline-info btn-sm"
+    onClick={() => setVistaActual(`scoutParticipaciones-${fila.id}`)}>{fila.id}</button></td>
             <td>{fila.apodo}</td>
             <td>{fila.nombre + " " + fila.apellido}</td>
             <td>{fila.graduacion}</td>
@@ -228,7 +237,12 @@ export function Display({ vistaActual }: Props) {
         return <td>Sin formato</td>;
     }
   };
-
+if (vistaActual.startsWith("scoutParticipaciones-")) {
+  const scoutId = Number(vistaActual.split("-")[1]);
+  return <ScoutParticipaciones scoutId={scoutId} setVistaActual={function (value: SetStateAction<string>): void {
+    throw new Error("Function not implemented.");
+  } } />;
+}
 
   //fitrar payload del update
   const buildUpdatePayload = (vista: string, data: any) => {

@@ -4,7 +4,6 @@ import { MenuLateral } from "./components/MenuLateral";
 import { Display } from "./components/Display";
 import { Nav } from "./components/Nav";
 import { Header } from "./components/Header";
-import MenuSuperior from "./components/MenuSuperior";
 import CarouselPublico from "./components/CarruselPublico";
 
 export default function App() {
@@ -34,11 +33,15 @@ export default function App() {
         )}
 
         <div className={menuOpen? "col-md-9" : "col-12"}>
-          <Display vistaActual={vistaActual} />
+          <Display 
+          vistaActual={vistaActual} 
+          setVistaActual={setVistaActual}/>
         </div>
       </div>
     </div>
   );
+
+  
 }
 
    /////////////// 
