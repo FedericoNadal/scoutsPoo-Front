@@ -33,7 +33,7 @@ export function Display({ vistaActual,setVistaActual}: Props) {
         observaciones: observacion
       });
 
-      // update optimista
+        // update optimista
       setData(prev =>
         prev.map(p =>
           p.id === participacionId
@@ -46,6 +46,16 @@ export function Display({ vistaActual,setVistaActual}: Props) {
     }
   };
 
+  const handleCancelarInscripcion = async (participacionId: number) => {
+  if (!confirm("¿Cancelar la inscripción de este scout?")) return;
+  try {
+    await api.delete(`/participaciones/${participacionId}`);
+    setData(prev => prev.filter(p => p.id !== participacionId));
+  } catch (e) {
+    console.error("Error cancelando inscripción", e);
+    alert("No se pudo cancelar la inscripción.");
+  }
+};
   const editableFieldsMap: Record<string, string[]> = {
     actividades: ["descripcion"],
     comunidades: ["actividadPrincipal"],
@@ -341,17 +351,23 @@ if (vistaActual.startsWith("scoutParticipaciones-")) {
                   </>
                 )}
 
-                {modoAsistencia && (
-                  <div>
-                    <BotoneraObservaciones
-                      valorInicial={fila.observaciones ?? ""}
-                      onChange={(valor) =>
-                        handleCambioObservacion(fila.id, valor)
-                      }
-                    />
-                    
-                  </div> 
-                )}
+              {modoAsistencia && (
+  <div className="d-flex align-items-center gap-3">
+    <BotoneraObservaciones
+      valorInicial={fila.observaciones ?? ""}
+      onChange={(valor) =>
+        handleCambioObservacion(fila.id, valor)
+      }
+    />
+    <button
+      className="btn btn-outline-danger btn-sm ms-2"
+      title="Cancelar inscripción"
+      onClick={() => handleCancelarInscripcion(fila.id)}
+    >
+      🚫baja
+    </button>
+  </div>
+)}
                  
              </td>
                     
