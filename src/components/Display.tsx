@@ -59,7 +59,7 @@ export function Display({ vistaActual,setVistaActual}: Props) {
   const editableFieldsMap: Record<string, string[]> = {
     actividades: ["descripcion"],
     comunidades: ["actividadPrincipal"],
-    grupo: ["descripcion"],
+    grupo: ["denominacion"],
     sedes: ["nombre", "direccion", "provincia", "localidad"],
     scouts: ["nombre", "apellido", "graduacion"],
     participaciones: ["observaciones"],
